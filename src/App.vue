@@ -1,18 +1,27 @@
-<template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
-</template>
-
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  setup() {
+    const users = ref([]);
+    onMounted(() => {
+      axios.get('https://jsonplaceholder.typicode.com/users')
+        .then(response => {
+          users.value = response.data;
+        })
+        .catch(error => {
+          console.error(error)
+        });
+    });
+    return { users }
   }
 }
 </script>
+
+
+<template>
+  <router-view :users="users" />
+</template>
 
 <style>
 #app {
@@ -21,6 +30,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
+
+ 
 </style>
